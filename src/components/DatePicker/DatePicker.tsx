@@ -24,7 +24,7 @@ type Props = {
 }
 
 export const DatePicker: FC<Props> = ({
-  value = null,
+  value,
   onChangeDate,
   parseInput,
   formatDate,
@@ -101,7 +101,7 @@ export const DatePicker: FC<Props> = ({
   }, [])
 
   useEffect(() => {
-    if (!value || !inputRef.current) {
+    if (value === undefined || !inputRef.current) {
       return
     }
     /**
@@ -113,10 +113,12 @@ export const DatePicker: FC<Props> = ({
       const newDate = stringToDate(value)
       if (newDate && dayjs(newDate).isValid()) {
         inputRef.current.value = dateToString(newDate)
+        setSelectedDate(newDate)
         return
       }
+      setSelectedDate(null)
     }
-    inputRef.current.value = value
+    inputRef.current.value = value || ''
   }, [value, isInputFocused, dateToString, stringToDate])
 
   useOuterClick(
